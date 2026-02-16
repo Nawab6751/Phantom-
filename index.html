@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHANTOM OS - VERCEL DEPLOY</title>
+    <style>
+        body { background: #000; color: #0f0; font-family: 'Courier New', monospace; margin: 0; display: flex; align-items: center; justify-content: center; height: 100vh; overflow: hidden; }
+        #login-screen { text-align: center; border: 1px solid #0f0; padding: 30px; box-shadow: 0 0 20px #0f0; background: rgba(0,20,0,0.9); }
+        #main-os { display: none; width: 100vw; height: 100vh; background: url('https://wallpaperaccess.com/full/1567665.jpg') no-repeat center; background-size: cover; position: relative; }
+        .icon { width: 80px; text-align: center; cursor: pointer; margin: 20px; transition: 0.3s; }
+        .icon:hover { transform: scale(1.1); text-shadow: 0 0 10px #0f0; }
+        .icon img { width: 50px; filter: drop-shadow(0 0 5px #0f0); }
+        .window { position: absolute; top: 15%; left: 25%; width: 350px; background: rgba(0,0,0,0.95); border: 1px solid #f00; box-shadow: 0 0 20px rgba(255,0,0,0.5); border-radius: 5px; display: none; }
+        .win-header { background: #f00; color: #000; padding: 5px 10px; font-weight: bold; display: flex; justify-content: space-between; }
+        .win-body { padding: 20px; }
+        input { width: 90%; padding: 10px; background: #111; border: 1px solid #444; color: #0f0; margin-bottom: 10px; outline: none; }
+        button { width: 100%; padding: 10px; background: #f00; color: #fff; border: none; font-weight: bold; cursor: pointer; }
+        button:hover { background: #b00; }
+    </style>
+</head>
+<body>
+
+<div id="login-screen">
+    <h2>👑 NAWAB ZADA ACCESS 👑</h2>
+    <p>Status: Encrypted | License Required</p>
+    <input type="password" id="keyInput" placeholder="Enter Access Key...">
+    <button onclick="checkKey()" style="background:#0f0; color:#000;">UNLOCK SYSTEM</button>
+    <br><br>
+    <a href="https://gplinks.com/your-link" target="_blank" style="color:red; font-size:12px;">Get Free License Key Here</a>
+</div>
+
+<div id="main-os">
+    <div class="icon" onclick="openTool()">
+        <img src="https://cdn-icons-png.flaticon.com/512/2592/2592317.png">
+        <br><span>Phantom_Dialer</span>
+    </div>
+
+    <div class="window" id="dialerTool">
+        <div class="win-header"><span>DIALER v1.0</span><span onclick="closeTool()" style="cursor:pointer;">X</span></div>
+        <div class="win-body">
+            <label style="font-size:10px;">TARGET NUMBER:</label>
+            <input type="text" placeholder="+92300XXXXXXX">
+            <label style="font-size:10px;">SPOOF ID:</label>
+            <input type="text" placeholder="Mirror Mode Active" style="border-color:#f00;">
+            <button onclick="startCall()">INITIATE ATTACK</button>
+            <div id="status" style="font-size:9px; color:yellow; margin-top:10px; text-align:center;"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function checkKey() {
+        const key = document.getElementById('keyInput').value;
+        if(key === "NAWAB786") {
+            document.getElementById('login-screen').style.display = 'none';
+            document.getElementById('main-os').style.display = 'block';
+        } else {
+            alert("Wrong Key! Click 'Get Free License Key' to earn one.");
+        }
+    }
+
+    function openTool() { document.getElementById('dialerTool').style.display = 'block'; }
+    function closeTool() { document.getElementById('dialerTool').style.display = 'none'; }
+
+    function startCall() {
+        document.getElementById('status').innerText = "[!] Bypassing Carrier Security...";
+        setTimeout(() => {
+            document.getElementById('status').innerText = "[✔] Connection Established. Voice Routing...";
+            alert("Signal Successfully Mirrored to Target!");
+        }, 2000);
+    }
+</script>
+
+</body>
+  </html>
+      
