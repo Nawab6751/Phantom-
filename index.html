@@ -2,126 +2,123 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NAWAB-OS | GLOBAL RECON</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NAWAB-OS | SATELLITE COMMAND</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body, html { height: 100%; background: #000; font-family: 'Courier New', monospace; overflow: hidden; color: #0f0; }
+        body { background: #0a0a0a; font-family: 'Courier New', monospace; color: #0f0; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
 
-        /* 🖼️ Ghost DP Background */
-        .dp-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://i.imgur.com/8Q8pY7z.jpeg') no-repeat center center/cover;
-            opacity: 0.15; z-index: 0; filter: grayscale(100%);
+        /* Main Window Like Your Photo */
+        .window {
+            width: 95%; max-width: 800px; height: 90vh; background: #000;
+            border: 2px solid #0f0; box-shadow: 0 0 20px #0f0;
+            display: flex; flex-direction: column; position: relative;
         }
 
-        /* 🌍 Stable Map Fix */
-        #map-container {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            z-index: 1; filter: invert(100%) hue-rotate(180deg) brightness(0.6) contrast(1.2);
-            opacity: 0.6; pointer-events: none;
+        .window-header {
+            background: #0f0; color: #000; padding: 8px 15px;
+            font-weight: 900; display: flex; justify-content: space-between;
         }
 
-        .overlay {
-            position: relative; z-index: 10; width: 100%; height: 100vh;
-            background: rgba(0, 10, 0, 0.75); display: flex; flex-direction: column;
+        /* 📡 THE CLEAR SCREEN (Map View) */
+        .map-display {
+            width: 100%; height: 300px; border-bottom: 2px solid #0f0;
+            background: #050505; position: relative; overflow: hidden;
+        }
+        #map-frame { width: 100%; height: 100%; border: none; filter: brightness(1.1); }
+
+        .scan-line {
+            position: absolute; width: 100%; height: 4px; background: rgba(0, 255, 0, 0.5);
+            top: 0; z-index: 10; animation: scan 3s linear infinite; display: none;
+        }
+        @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
+
+        /* Output Terminal */
+        #output {
+            flex-grow: 1; padding: 15px; overflow-y: auto; font-size: 0.85rem;
+            background: rgba(0, 10, 0, 0.9); border-bottom: 1px solid #0f0;
         }
 
-        .header { background: #000; padding: 12px; border-bottom: 2px solid #0f0; text-align: center; letter-spacing: 3px; font-weight: 900; box-shadow: 0 5px 15px rgba(0,255,0,0.3); }
+        /* Input Area */
+        .input-section { padding: 10px; background: #000; }
+        .input-row { display: flex; gap: 5px; margin-bottom: 10px; }
+        input { flex-grow: 1; background: transparent; border: 1px solid #0f0; color: #fff; padding: 8px; outline: none; }
+        button { background: #0f0; color: #000; border: none; padding: 8px 15px; font-weight: bold; cursor: pointer; }
 
-        #output { flex-grow: 1; padding: 15px; overflow-y: auto; font-size: 0.8rem; line-height: 1.4; color: #0f0; text-shadow: 0 0 5px #0f0; }
-
-        /* Dashboard UI */
-        .dashboard { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 15px; background: #000; border-top: 2px solid #0f0; }
-        .tile { border: 1px solid #0f0; padding: 12px; text-align: center; border-radius: 4px; cursor: pointer; background: rgba(0,255,0,0.05); }
+        /* Dashboard Tiles */
+        .tiles { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; }
+        .tile { border: 1px solid #0f0; padding: 10px; text-align: center; font-size: 0.7rem; cursor: pointer; }
         .tile:active { background: #0f0; color: #000; }
         .tile b { display: block; font-size: 0.9rem; }
-        .tile span { font-size: 0.6rem; color: #aaa; }
-
-        /* Input Box */
-        .input-box { display: none; padding: 15px; background: #000; border-top: 1px solid #0f0; }
-        input { width: 100%; background: transparent; border: 1px solid #0f0; color: #fff; padding: 10px; outline: none; margin-bottom: 8px; font-family: 'Courier New'; }
-
-        .scan-anim { position: fixed; width: 100%; height: 3px; background: #0f0; top: 0; left: 0; z-index: 100; display: none; box-shadow: 0 0 20px #0f0; animation: move 2s linear infinite; }
-        @keyframes move { 0% { top: 0; } 100% { top: 100%; } }
     </style>
 </head>
 <body>
 
-    <div class="dp-bg"></div>
-    <div id="map-container">
-        <iframe id="map-frame" width="100%" height="100%" frameborder="0" src="https://maps.google.com/maps?q=world&t=k&z=3&ie=UTF8&iwloc=&output=embed"></iframe>
-    </div>
-    <div class="scan-anim" id="scanner"></div>
+    <div class="window">
+        <div class="window-header">
+            <span>📡 NAWAB_ZADA_COMMAND_CENTER</span>
+            <span>[X]</span>
+        </div>
 
-    <div class="overlay">
-        <div class="header">NAWAB_ZADA_COMMAND_CENTER</div>
+        <div class="map-display">
+            <div class="scan-line" id="laser"></div>
+            <iframe id="map-frame" src="http://googleusercontent.com/maps.google.com/4"></iframe>
+        </div>
+
         <div id="output">
-[SECURE_ACCESS_GRANTED]
-[RECON_STATUS]: Standby...
-Ready for Global Targeting.
+[SYSTEM READY]
+[ENCRYPTION]: AES-256 ACTIVE
+[STATUS]: Awaiting Target Data...
         </div>
 
-        <div class="input-box" id="inputBox">
-            <input type="text" id="targetInput" placeholder="Enter Location or Number...">
-            <button onclick="startAction()" style="width:100%; background:#0f0; color:#000; border:none; padding:8px; font-weight:bold;">INITIATE SCAN</button>
-        </div>
-
-        <div class="dashboard">
-            <div class="tile" onclick="openInput('city')">🏙️ <b>CITY</b><span>Scan Location</span></div>
-            <div class="tile" onclick="startVoice()">🎤 <b>VOICE</b><span>Voice Command</span></div>
-            <div class="tile" onclick="openInput('number')">📞 <b>NUMBER</b><span>Trace Digit</span></div>
-            <div class="tile" onclick="openInput('ip')">📡 <b>IP</b><span>Trace Network</span></div>
+        <div class="input-section">
+            <div class="input-row">
+                <input type="text" id="target" placeholder="Enter City/Target Name...">
+                <button onclick="runScan()">INITIATE SCAN</button>
+            </div>
+            
+            <div class="tiles">
+                <div class="tile" onclick="speakMsg('Ready to scan city')">🏙️ <b>CITY</b>Scan Mode</div>
+                <div class="tile" onclick="startVoice()">🎤 <b>VOICE</b>Command</div>
+                <div class="tile" onclick="speakMsg('Tracing Number')">📞 <b>NUMBER</b>Trace</div>
+            </div>
         </div>
     </div>
 
     <script>
         const output = document.getElementById('output');
-        const map = document.getElementById('map-frame');
-        const scanner = document.getElementById('scanner');
-        const inputBox = document.getElementById('inputBox');
-        const targetInput = document.getElementById('targetInput');
+        const frame = document.getElementById('map-frame');
+        const laser = document.getElementById('laser');
 
         function speak(t) { window.speechSynthesis.speak(new SpeechSynthesisUtterance(t)); }
+        function speakMsg(m) { output.innerHTML += `<br>[INFO]: ${m}`; speak(m); }
 
-        function openInput(m) {
-            inputBox.style.display = 'block';
-            targetInput.placeholder = `Target ${m.toUpperCase()}...`;
-            targetInput.focus();
-        }
-
-        function startAction() {
-            const val = targetInput.value;
+        function runScan() {
+            const val = document.getElementById('target').value;
             if(!val) return;
-            executeScan(val);
-            inputBox.style.display = 'none';
-            targetInput.value = '';
-        }
-
-        function executeScan(loc) {
-            scanner.style.display = 'block';
-            output.innerHTML += `<br><span style="color:cyan">[TARGET_LOCKED]: ${loc.toUpperCase()}</span>`;
             
-            // 🗺️ FIXED MAP URL (Embed Mode)
-            const mapUrl = `https://maps.google.com/maps?q=${encodeURIComponent(loc)}&t=k&z=15&ie=UTF8&iwloc=&output=embed`;
-            map.src = mapUrl;
+            laser.style.display = 'block';
+            output.innerHTML += `<br><span style="color:cyan">[LOCKING]: ${val.toUpperCase()}</span>`;
+            
+            // 🗺️ HD MAP UPDATE
+            frame.src = `http://googleusercontent.com/maps.google.com/5{encodeURIComponent(val)}&t=k&z=17&output=embed`;
 
             setTimeout(() => {
-                scanner.style.display = 'none';
-                speak(`Scan complete. Accessing data for ${loc}`);
-                output.innerHTML += `<br><span style="color:#0f0">[SUCCESS] Satellite Feed Established.</span>`;
+                laser.style.display = 'none';
+                output.innerHTML += `<br><span style="color:#0f0">[SUCCESS]: High-Res feed established.</span>`;
+                speak(`Target locked. Satellite feed active for ${val}`);
             }, 3000);
         }
 
-        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+        // Voice Command
+        const recognition = new (window.webkitSpeechRecognition || window.SpeechRecognition)();
         function startVoice() {
             recognition.start();
-            output.innerHTML += `<br>[AI]: Listening...`;
-            speak("System is listening.");
+            output.innerHTML += `<br>[AI]: Listening for location...`;
         }
         recognition.onresult = (e) => {
-            const voice = e.results[0][0].transcript;
-            executeScan(voice);
+            document.getElementById('target').value = e.results[0][0].transcript;
+            runScan();
         };
     </script>
 </body>
