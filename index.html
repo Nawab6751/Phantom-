@@ -3,38 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NAWAB-OS | VOICE CONTROLLED TERMINAL</title>
+    <title>NAWAB-OS v5.0 | FINAL EDITION</title>
     <style>
-        * { box-sizing: border-box; }
-        body, html { margin: 0; padding: 0; height: 100%; background: #000; font-family: 'Courier New', monospace; overflow: hidden; color: #0f0; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body, html { height: 100%; background: #000; font-family: 'Courier New', monospace; overflow: hidden; }
         
-        /* Wallpaper - Nawab Zada Special */
+        /* 🖼️ DP FIXED - Seedha image link use kiya hai */
         .wallpaper {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://files.catbox.moe/pvh5v9.jpg') no-repeat center center/cover;
-            opacity: 0.25; z-index: 1; filter: brightness(40%) contrast(120%);
+            background-image: url('https://files.catbox.moe/pvh5v9.jpg');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.45; /* Picture thori clear kar di hai */
+            z-index: 1;
+            filter: contrast(110%);
         }
 
-        #matrix-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0.15; }
+        #matrix-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 2; opacity: 0.2; }
 
         .terminal-container {
             position: relative; z-index: 10; width: 100%; height: 100vh;
-            background: rgba(0, 0, 0, 0.7); display: flex; flex-direction: column; padding: 10px;
+            background: rgba(0, 0, 0, 0.6); display: flex; flex-direction: column;
         }
 
-        .header { text-align: center; border-bottom: 1px solid #0f0; padding: 5px; font-weight: bold; letter-spacing: 2px; font-size: 0.8rem; }
+        .header { text-align: center; border-bottom: 2px solid #0f0; padding: 10px; color: #0f0; font-weight: bold; font-size: 1rem; text-shadow: 0 0 10px #0f0; }
 
-        #output { flex-grow: 1; overflow-y: auto; padding: 10px; font-size: 0.85rem; white-space: pre-wrap; line-height: 1.3; color: #0f0; }
+        #output { flex-grow: 1; overflow-y: auto; padding: 15px; font-size: 0.9rem; color: #0f0; white-space: pre-wrap; line-height: 1.4; }
 
-        .input-line { display: flex; align-items: center; padding: 10px; background: rgba(0,0,0,0.9); border-top: 1px solid #1a1a1a; }
-        .prompt { color: #0f0; font-weight: bold; margin-right: 8px; }
-        input { background: transparent; border: none; color: #0f0; font-family: 'Courier New', monospace; font-size: 1rem; outline: none; flex-grow: 1; }
+        /* 🎤 BUTTON SECTION */
+        .control-panel {
+            padding: 15px; background: rgba(0, 20, 0, 0.9); border-top: 2px solid #0f0;
+            display: flex; flex-direction: column; gap: 10px;
+        }
 
-        .voice-btn { background: #0f0; color: #000; border: none; padding: 5px 10px; font-weight: bold; cursor: pointer; border-radius: 5px; margin-left: 10px; }
+        .input-row { display: flex; align-items: center; gap: 10px; }
+        .prompt { color: #0f0; font-weight: bold; }
+        input { background: transparent; border: none; color: #fff; font-family: 'Courier New'; font-size: 1rem; outline: none; flex-grow: 1; border-bottom: 1px solid #333; }
+
+        .voice-btn { 
+            background: #0f0; color: #000; border: none; padding: 12px; 
+            font-weight: 900; cursor: pointer; border-radius: 8px; 
+            text-transform: uppercase; letter-spacing: 2px;
+            box-shadow: 0 0 15px #0f0; width: 100%;
+        }
         
+        .voice-btn:active { transform: scale(0.95); background: #008000; }
+
         .success { color: #00ff00; }
         .info { color: #00ccff; }
-        .danger { color: #ff0000; }
     </style>
 </head>
 <body>
@@ -43,17 +59,20 @@
     <canvas id="matrix-bg"></canvas>
 
     <div class="terminal-container">
-        <div class="header">◈ NAWAB-OS v4.0 (AI_VOICE_INTERFACE) ◈</div>
+        <div class="header">◈ NAWAB-OS v5.0 (FINAL) ◈</div>
         <div id="output">
-[SYSTEM INITIALIZED]
-[AI CORE]: Online
-[USER]: Nawab Zada
-Type command or click 'LISTEN' to speak...
+[BOOTING...]
+[NAWAB ZADA DETECTED]
+System is ready for command.
+Click 'START VOICE COMMAND' to speak.
         </div>
-        <div class="input-line">
-            <span class="prompt">nawab@system:~$</span>
-            <input type="text" id="cmdInput" autofocus spellcheck="false" autocomplete="off">
-            <button class="voice-btn" onclick="startVoiceListener()">LISTEN</button>
+        
+        <div class="control-panel">
+            <div class="input-row">
+                <span class="prompt">nawab@os:~$</span>
+                <input type="text" id="cmdInput" placeholder="Type here..." autocomplete="off">
+            </div>
+            <button class="voice-btn" onclick="startVoice()">🎤 Start Voice Command</button>
         </div>
     </div>
 
@@ -61,65 +80,66 @@ Type command or click 'LISTEN' to speak...
         const input = document.getElementById('cmdInput');
         const output = document.getElementById('output');
 
-        // 🤖 Robotic Voice Function
+        // 🤖 Robotic Voice
         function speak(text) {
             const utterance = new SpeechSynthesisUtterance(text);
-            utterance.pitch = 0.6; // Heavy voice
-            utterance.rate = 1;
+            utterance.pitch = 0.5;
             window.speechSynthesis.speak(utterance);
         }
 
-        // 🎤 Voice Recognition
-        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
-        recognition.lang = 'en-US';
+        // 🎤 Speech Engine
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            alert("Jani aapka browser voice command support nahi karta. Chrome use karo!");
+        } else {
+            const recognition = new SpeechRecognition();
+            recognition.lang = 'en-US';
 
-        function startVoiceListener() {
-            recognition.start();
-            output.innerHTML += "\n<span class='info'>[VOICE] Nawab-OS is listening...</span>";
-            speak("Listening, Boss.");
+            function startVoice() {
+                recognition.start();
+                output.innerHTML += "\n<span class='info'>[LISTENING...] Say something, Boss!</span>";
+                speak("Listening.");
+            }
+
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript.toLowerCase();
+                output.innerHTML += `\n<span style="color:#fff">You said: ${transcript}</span>`;
+                handleCmd(transcript);
+            };
         }
 
-        recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript.toLowerCase();
-            output.innerHTML += `\n<span style="color:#fff">Voice Cmd: ${transcript}</span>`;
-            processCommand(transcript);
-        };
-
-        // ⚙️ Command Processor
-        function processCommand(cmd) {
-            if (cmd.includes("help")) {
-                output.innerHTML += "\n- ls\n- apt update\n- who are you\n- clear";
-            } else if (cmd.includes("who are you")) {
-                speak("I am Nawab OS, the ultimate hacking machine created by Nawab Zada.");
-                output.innerHTML += "\n[AI]: I am Nawab-OS v4.0.";
-            } else if (cmd.includes("update")) {
-                output.innerHTML += "\n[SYSTEM] Updating all modules... <span class='success'>Done.</span>";
+        function handleCmd(cmd) {
+            if (cmd.includes("who are you")) {
+                speak("I am Nawab OS, created by the legend Nawab Zada.");
+                output.innerHTML += "\n[AI]: I am Nawab-OS v5.0.";
+            } else if (cmd.includes("update") || cmd.includes("apt")) {
+                output.innerHTML += "\n[SYSTEM] Updating Nawab-OS... <span class='success'>SUCCESS.</span>";
                 speak("System updated.");
-            } else if (cmd === "clear") {
-                output.innerHTML = "[SESSION REBOOTED]";
+            } else if (cmd.includes("clear") || cmd.includes("cls")) {
+                output.innerHTML = "[SYSTEM REFRESHED]\n";
             } else {
-                output.innerHTML += `\n<span class="danger">bash: ${cmd}: command not found</span>`;
+                output.innerHTML += `\n<span style="color:red">Unknown command: ${cmd}</span>`;
             }
             output.scrollTop = output.scrollHeight;
         }
 
         input.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
-                processCommand(input.value.toLowerCase().trim());
+                handleCmd(input.value.toLowerCase().trim());
                 input.value = "";
             }
         });
 
-        // 🌧️ Matrix Rain
+        // 🌧️ Matrix Animation
         const canvas = document.getElementById('matrix-bg');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth; canvas.height = window.innerHeight;
         function draw() {
-            ctx.fillStyle = "rgba(0,0,0,0.05)"; ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = "#0f0"; ctx.font = "14px arial";
-            [...Array(Math.floor(canvas.width/14))].map((_,i) => {
-                ctx.fillText(Math.floor(Math.random()*2), i*14, Math.random()*canvas.height);
-            });
+            ctx.fillStyle = "rgba(0,0,0,0.1)"; ctx.fillRect(0,0,canvas.width,canvas.height);
+            ctx.fillStyle = "#0f0"; ctx.font = "15px arial";
+            for(let i=0; i<canvas.width/15; i++) {
+                ctx.fillText(Math.floor(Math.random()*2), i*15, Math.random()*canvas.height);
+            }
         }
         setInterval(draw, 50);
     </script>
