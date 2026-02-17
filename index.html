@@ -4,123 +4,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>NAWAB-OS v6.0 | LEGEND EDITION</title>
+    <title>NAWAB-OS | GLOBAL RECON SYSTEM</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body, html { height: 100%; background: #000; font-family: 'Courier New', monospace; overflow: hidden; }
-        
-        /* 🖼️ DP FIXED - Seedha Imgur Link (Zyada Stable) */
-        .wallpaper {
+        body, html { height: 100%; background: #000; font-family: 'Courier New', monospace; overflow: hidden; color: #0f0; }
+
+        /* 🌍 REAL-TIME MAP CONTAINER */
+        #map-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: url('https://i.imgur.com/8Q8pY7z.jpeg') no-repeat center center/cover;
-            opacity: 0.6; /* Picture ab thori aur saaf dikhegi */
-            z-index: -1;
-            filter: brightness(50%) contrast(110%);
+            z-index: 1; filter: grayscale(100%) invert(90%) opacity(0.3);
+            transition: all 1s ease-in-out;
         }
 
-        #matrix-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; opacity: 0.2; }
+        /* 🔍 SCANNING OVERLAY */
+        .scanner-ring {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 300px; height: 300px; border: 2px solid #0f0; border-radius: 50%;
+            z-index: 5; box-shadow: 0 0 50px #0f0; pointer-events: none;
+            display: none; animation: pulse 1.5s infinite;
+        }
 
-        .terminal-container {
+        @keyframes pulse { 0% { scale: 0.8; opacity: 0.5; } 100% { scale: 1.2; opacity: 0; } }
+
+        .terminal-overlay {
             position: relative; z-index: 10; width: 100%; height: 100vh;
-            background: rgba(0, 0, 0, 0.5); display: flex; flex-direction: column;
+            background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%);
+            display: flex; flex-direction: column; justify-content: space-between;
         }
 
-        .header { text-align: center; border-bottom: 2px solid #0f0; padding: 15px; color: #0f0; font-weight: bold; font-size: 1.2rem; text-shadow: 0 0 10px #0f0; background: rgba(0,0,0,0.8); }
+        .header { background: rgba(0,255,0,0.1); padding: 15px; text-align: center; border-bottom: 2px solid #0f0; text-shadow: 0 0 10px #0f0; }
 
-        #output { flex-grow: 1; overflow-y: auto; padding: 20px; font-size: 1rem; color: #0f0; white-space: pre-wrap; line-height: 1.5; text-shadow: 1px 1px 2px #000; }
+        #output { flex-grow: 1; padding: 20px; overflow-y: auto; font-size: 0.85rem; line-height: 1.5; }
 
-        .control-panel { padding: 20px; background: rgba(0, 30, 0, 0.9); border-top: 2px solid #0f0; }
+        .bottom-panel { padding: 20px; background: rgba(0,0,0,0.9); border-top: 2px solid #0f0; }
 
-        .input-row { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
-        .prompt { color: #0f0; font-weight: bold; }
-        input { background: transparent; border: none; color: #fff; font-family: 'Courier New'; font-size: 1.1rem; outline: none; flex-grow: 1; border-bottom: 1px solid #0f0; }
-
-        .voice-btn { 
-            background: #0f0; color: #000; border: none; padding: 15px; 
-            font-weight: 900; cursor: pointer; border-radius: 10px; 
-            text-transform: uppercase; letter-spacing: 2px;
-            box-shadow: 0 0 20px #0f0; width: 100%; font-size: 1.1rem;
+        .btn-voice {
+            width: 100%; padding: 15px; background: #0f0; color: #000; border: none;
+            font-weight: 900; border-radius: 10px; cursor: pointer; font-size: 1.1rem;
+            box-shadow: 0 0 20px #0f0;
         }
+
+        .location-tag { color: #fff; background: #f00; padding: 2px 5px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="wallpaper"></div>
-    <canvas id="matrix-bg"></canvas>
+    <div id="map-container">
+        <iframe id="map-frame" width="100%" height="100%" frameborder="0" src="https://www.google.com/maps/embed?pb=!1m14!1m12!1m3!1d30000000!2d0!3d0!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!5e1!3m2!1sen!2s!4v1600000000000!5m2!1sen!2s"></iframe>
+    </div>
 
-    <div class="terminal-container">
-        <div class="header">◈ NAWAB-OS v6.0 (LEGEND) ◈</div>
-        <div id="output">
-[SYSTEM READY]
-[USER]: NAWAB_ZADA
-Status: Secured
+    <div class="scanner-ring" id="scanner"></div>
 
-Click the button below to use Voice Command.
-        </div>
+    <div class="terminal-overlay">
+        <div class="header">◈ NAWAB-OS: GLOBAL RECONNAISSANCE ◈</div>
         
-        <div class="control-panel">
-            <div class="input-row">
-                <span class="prompt">nawab@os:~$</span>
-                <input type="text" id="cmdInput" placeholder="Command..." autocomplete="off">
-            </div>
-            <button class="voice-btn" onclick="startVoice()">🎤 START VOICE COMMAND</button>
+        <div id="output">
+[SYSTEM INITIALIZED]
+[EYE OF NAWAB]: Online
+[AI READY]: Waiting for voice location...
+
+Command: Say "Scan [City Name]"
+Example: "Scan Dubai" or "Scan Karachi"
+        </div>
+
+        <div class="bottom-panel">
+            <button class="btn-voice" onclick="startRecon()">🎤 ACTIVATE VOICE RECON</button>
         </div>
     </div>
 
     <script>
-        const input = document.getElementById('cmdInput');
         const output = document.getElementById('output');
+        const mapFrame = document.getElementById('map-frame');
+        const scanner = document.getElementById('scanner');
 
         function speak(text) {
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.pitch = 0.5;
-            window.speechSynthesis.speak(utterance);
+            const ut = new SpeechSynthesisUtterance(text);
+            ut.pitch = 0.6; window.speechSynthesis.speak(ut);
         }
 
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        const recognition = new SpeechRecognition();
+        const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
         recognition.lang = 'en-US';
 
-        function startVoice() {
+        function startRecon() {
             recognition.start();
-            output.innerHTML += "\n<span style='color:#00ccff'>[LISTENING...] Say 'Who are you'</span>";
-            speak("Listening.");
+            output.innerHTML += `<br><span style="color:cyan">[LISTENING] Describe target location...</span>`;
+            speak("Scanning for target location, Nawab Zada.");
         }
 
         recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript.toLowerCase();
-            output.innerHTML += `\n<span style="color:#fff">You said: ${transcript}</span>`;
+            const speech = event.results[0][0].transcript.toLowerCase();
+            output.innerHTML += `<br><span style="color:white">Command: ${speech}</span>`;
             
-            if (transcript.includes("who are you")) {
-                speak("I am Nawab O S, created by Nawab Zada.");
-                output.innerHTML += "\n[AI]: I am Nawab-OS v6.0.";
-            } else if (transcript.includes("clear")) {
-                output.innerHTML = "[SYSTEM REFRESHED]\n";
-            } else {
-                output.innerHTML += `\n[SYSTEM]: Command executed.`;
+            if (speech.includes("scan")) {
+                const location = speech.replace("scan", "").trim();
+                executeRecon(location);
             }
-            output.scrollTop = output.scrollHeight;
         };
 
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') {
-                output.innerHTML += `\n<span class="prompt">nawab@os:~$</span> ${input.value}`;
-                input.value = "";
-                output.scrollTop = output.scrollHeight;
-            }
-        });
-
-        const canvas = document.getElementById('matrix-bg');
-        const ctx = canvas.getContext('2d');
-        canvas.width = window.innerWidth; canvas.height = window.innerHeight;
-        function draw() {
-            ctx.fillStyle = "rgba(0,0,0,0.1)"; ctx.fillRect(0,0,canvas.width,canvas.height);
-            ctx.fillStyle = "#0f0"; ctx.font = "15px arial";
-            for(let i=0; i<canvas.width/15; i++) {
-                ctx.fillText(Math.floor(Math.random()*2), i*15, Math.random()*canvas.height);
-            }
+        function executeRecon(loc) {
+            scanner.style.display = "block";
+            output.innerHTML += `<br><span style="color:yellow">[LOCKING] Targeting: ${loc.toUpperCase()}</span>`;
+            output.innerHTML += `<br>[INFO] Accessing Satellite B-786...`;
+            
+            // Map Update (Real-time Zoom)
+            mapFrame.src = `https://www.google.com/maps?q=${loc}&output=embed&t=k`;
+            
+            setTimeout(() => {
+                speak(`Target locked in ${loc}. Analyzing data.`);
+                output.innerHTML += `<br><span class="location-tag">TARGET ACQUIRED: ${loc.toUpperCase()}</span>`;
+                output.innerHTML += `<br>[DATA] Traffic: Stable | Signal: High | Activity: Detected`;
+                scanner.style.display = "none";
+            }, 4000);
         }
-        setInterval(draw, 50);
     </script>
 </body>
 </html>
